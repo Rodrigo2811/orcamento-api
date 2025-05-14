@@ -8,10 +8,12 @@ import fs from 'fs/promises';
 
 
 
-const porta = 3333
+const porta = process.env.PORT || 3001
+
 const app = express();
 app.use(express.json())
 app.use(cors())
+
 
 
 mongoose.connect('mongodb+srv://rodrigoleiro:Q67wuTXpc3VI0ymZ@orcamentos.3xy54cl.mongodb.net/?retryWrites=true&w=majority&appName=orcamentos', {
