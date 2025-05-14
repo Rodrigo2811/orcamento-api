@@ -50,6 +50,25 @@ app.get('/orcamento', async (req, res) => {
   }
 })
 
+app.post("/orcamento", async (req, res) => {
+  const { veiculo, cor, cliente, servico, total } = req.body;
+
+  const orcamento = {
+    veiculo, cor, cliente, servico, total
+  };
+
+  if (veiculo === "") {
+    return res.status(400).json({ erro: "O campo veículo é obrigatório" });
+  }
+
+  try {
+    await orcamentos.create(orcamento);
+    res.status(201).json({ message: "Criado com sucesso" });
+  } catch (error) {
+    res.status(500).json({ erro: error });
+  }
+});
+
 
 app.get('/orcamento/:id', async (req, res) => {
   const { id } = req.params;
@@ -133,8 +152,6 @@ app.get('/orcamento/:id', async (req, res) => {
           <footer>
                         
               <span>Cliente</span>
-             
-
               <span>Bel Car</span>
                 
           </footer>
