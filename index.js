@@ -118,9 +118,9 @@ app.get('/orcamento/:id', async (req, res) => {
         </header>
           <h1>Orçamento</h1>
           
-          <p><strong>Veículo:</strong> ${orcamento.veiculo}</p>
-          <p><strong>Cor:</strong> ${orcamento.cor}</p>
-          <p><strong>Cliente:</strong> ${orcamento.cliente}</p>
+          <p><strong>Veículo:</strong> ${dados.veiculo}</p>
+          <p><strong>Cor:</strong> ${dados.cor}</p>
+          <p><strong>Cliente:</strong> ${dados.cliente}</p>
 
           <h2>Serviços</h2>
           <table>
@@ -132,7 +132,7 @@ app.get('/orcamento/:id', async (req, res) => {
               </tr>
             </thead>
             <tbody>
-              ${orcamento.servico.map(item => `
+              ${dados.servico.map(item => `
                 <tr>
                   <td>${item.item}</td>
                   <td>${item.descricao}</td>
@@ -143,7 +143,7 @@ app.get('/orcamento/:id', async (req, res) => {
             <tfoot>
               <tr>
                 <td colspan="2" class="total">Total:</td>
-                <td class="total">R$ ${Number(orcamento.total).toFixed(2)}</td>
+                <td class="total">R$ ${Number(dados.total).toFixed(2)}</td>
               </tr>
             </tfoot>
           </table>
@@ -166,7 +166,7 @@ app.get('/orcamento/:id', async (req, res) => {
 
 
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `inline; filename="orcamento-${orcamento.cliente}.pdf"`);
+    res.setHeader('Content-Disposition', `inline; filename="orcamento-${dados.cliente}.pdf"`);
     res.send(pdfBuffer);
 
   } catch (error) {
