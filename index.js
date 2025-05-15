@@ -15,26 +15,15 @@ app.use(cors())
 
 
 
-let browser;
-(async () => {
-  try {
-    browser = await puppeteer.launch({
-      headless: 'new',
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
-    });
+mongoose.connect('mongodb+srv://rodrigoleiro:Q67wuTXpc3VI0ymZ@orcamentos.3xy54cl.mongodb.net/?retryWrites=true&w=majority&appName=orcamentos', {
 
-    mongoose.connect('mongodb+srv://rodrigoleiro:Q67wuTXpc3VI0ymZ@orcamentos.3xy54cl.mongodb.net/?retryWrites=true&w=majority&appName=orcamentos')
-      .then(() => console.log('Conectado no banco'))
-      .catch((error) => console.error('Erro ao conectar no banco:', error));
+}).then(() => {
+  console.log('Conectado no banco')
 
-    app.listen(porta, () => {
-      console.log('Servidor rodando na porta ' + porta);
-    });
+}).catch((error) => {
+  console.error('Erro ao conectar no banco:', error);
+})
 
-  } catch (err) {
-    console.error("Erro ao iniciar o servidor:", err);
-  }
-})();
 
 const orcamentos = mongoose.model("orcamento", {
   veiculo: String,
