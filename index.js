@@ -72,7 +72,7 @@ app.post("/orcamento", async (req, res) => {
 app.get('/orcamento/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    const dados = await orcamentos.find(id);
+    const dados = await orcamentos.findOne(id);
     if (!dados) {
       return res.status(404).json({ message: "Id não encontrado" })
     }
