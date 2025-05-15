@@ -69,7 +69,9 @@ app.post("/orcamento", async (req, res) => {
 });
 
 
-app.get('/orcamento/:id', async (req, res) => {
+app.get('/orcamento/:id')
+
+app.get('/orcamentoPDF/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
