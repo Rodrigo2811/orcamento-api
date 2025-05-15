@@ -3,7 +3,7 @@
 import express from 'express';
 import mongoose from "mongoose";
 import cors from 'cors';
-import pdf from 'html-pdf';
+import puppeteer from "puppeteer";
 import fs from 'fs/promises';
 
 
@@ -74,7 +74,7 @@ app.get('/orcamento/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const orcamento = await orcamentos.findById(id);
+    const orcamento = await orcamentos.findById(id).lean();
     if (!orcamento) {
       return res.status(404).json({ message: "Orçamento não encontrado" });
     }
@@ -159,16 +159,18 @@ app.get('/orcamento/:id', async (req, res) => {
       </html>
     `;
 
-    pdf.create(html, { format: "A4" }).toBuffer((err, buffer) => {
-      if (err) {
-        console.error("Erro ao gerar o PDF: ", err);
-        return res.status(500).json({ message: "Erro ao gerar o PDF" });
-      }
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.setContent(html);
+    const pdfBuffer = await page.pdf({ format: "A4" });
+    await browser.close();
 
-      res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', `inline; filename="orcamento-${orcamento.cliente}.pdf"`);
-      res.send(buffer);
-    });
+
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `inline; filename="orcamento-${orcamento.cliente}.pdf"`);
+    res.send(pdfBuffer);
+
   } catch (error) {
     res.status(404).json({ message: "Erro ao gerar o orçamento" });
   }
