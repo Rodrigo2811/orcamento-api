@@ -185,7 +185,7 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
     await browser.close();
 
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `inline; filename="orcamento-${orcamento.cliente}.pdf"`);
+    res.setHeader('Content-Disposition', `filename="orcamento-${orcamento.cliente}.pdf"`);
 
     return res.send(pdfBuffer);
   } catch (error) {
