@@ -93,7 +93,7 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
     if (!orcamento) {
       return res.status(404).json({ message: "Orçamento não encontrado" });
     }
-
+    res.status(200).json(orcamento)
     const html = `
         <!DOCTYPE html>
         <html>
@@ -185,10 +185,21 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
 
     await browser.close();
 
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `inline; filename="orcamento-${orcamento.cliente}.pdf"`);
-    res.send(pdfBuffer)
+    response.contentType('application/pdf')
 
+    return response.send(pdfBuffer)
+
+
+
+
+
+
+
+    // res.setHeader('Content-Type', 'application/pdf');
+
+    // res.setHeader('Content-Disposition', `inline; filename="orcamento-${orcamento.cliente}.pdf"`);
+
+    // res.send(pdfBuffer);
 
   } catch (error) {
     res.status(404).json({ message: "Erro ao gerar o orçamento" });
