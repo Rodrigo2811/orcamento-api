@@ -73,7 +73,7 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const orcamento = await orcamentos.findById(id).lean();
+    const orcamento = await orcamentos.findById(id);
     if (!orcamento) {
       return res.status(404).json({ message: "Orçamento não encontrado" });
     }
@@ -110,7 +110,7 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
       <body>
 
         <header>
-          <h2>R.F.R Oficina, Funilaria e pintura EIRELE - ME</h2>
+          <h2>R.F.R Oficina, Funilaria e Pintura EIRELE - ME</h2>
           <p>Rua Boa Esperança, Nº 112, Centro Dias D’Ávila-BA CEP: 42.80-000 <br> Tel.(71) 9 8162-3273 EMAIL:
             oficinabelcarrfr@yahoo.com.br </br> CNPJ: 28.042.796/0001-64 - Inscrição Estadual - 141.459.169 ME
           </p>
@@ -158,19 +158,23 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
       </html>
     `;
 
+
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
     await page.goto('https://www.gooogle.com/')
 
     await page.setContent(html);
+
     const pdfBuffer = await page.pdf({ format: "A4" });
     await browser.close();
 
 
 
     res.setHeader('Content-Type', 'application/pdf');
+
     res.setHeader('Content-Disposition', `inline; filename="orcamento-${orcamento.cliente}.pdf"`);
+
     res.send(pdfBuffer);
 
   } catch (error) {
