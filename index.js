@@ -179,7 +179,7 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
     const browser = await puppeteer.launch({ headless: "true" });
     const page = await browser.newPage();
 
-    await page.setContent(html)
+    await page.setContent(html, { waitUntil: 'networkidle0' })
 
     const pdfBuffer = await page.pdf({ format: "A4" });
 
@@ -187,19 +187,17 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
 
     res.contentType('application/pdf')
 
-    return res.send(pdfBuffer)
-
-
-
 
 
 
 
     // res.setHeader('Content-Type', 'application/pdf');
 
-    // res.setHeader('Content-Disposition', `inline; filename="orcamento-${orcamento.cliente}.pdf"`);
+    res.setHeader('Content-Disposition', `inline; filename="orcamento-${orcamento.cliente}.pdf"`);
 
-    // res.send(pdfBuffer);
+
+
+    return res.send(pdfBuffer)
 
   } catch (error) {
     res.status(404).json({ message: "Erro ao gerar o orçamento" });
