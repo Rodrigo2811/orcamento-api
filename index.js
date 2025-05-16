@@ -92,8 +92,7 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
     if (!orcamento) {
       return res.status(404).json({ message: "Orçamento não encontrado" });
     }
-
-    res.pdf(orcamento)
+    res.status(200).json(orcamento)
     const html = `
         <!DOCTYPE html>
         <html>
@@ -176,19 +175,24 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
       `;
 
 
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
-    await page.setContent(html, { waitUntil: 'networkidle0' });
+    await page.goto('https://www.gooogle.com/')
+
+    await page.setContent(html);
 
     const pdfBuffer = await page.pdf({ format: "A4" });
-
     await browser.close();
 
+
+
     res.setHeader('Content-Type', 'application/pdf');
+
     res.setHeader('Content-Disposition', `inline; filename="orcamento-${orcamento.cliente}.pdf"`);
 
-    return res.send(pdfBuffer);
+    res.send(pdfBuffer);
+
   } catch (error) {
     res.status(404).json({ message: "Erro ao gerar o orçamento" });
   }
