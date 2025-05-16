@@ -93,7 +93,8 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
       return res.status(404).json({ message: "Orçamento não encontrado" });
     }
 
-    const html = `
+    res.send(html, {
+      html: `
         <!DOCTYPE html>
         <html>
         <head>
@@ -172,7 +173,7 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
             </footer>
         </body>
         </html>
-      `;
+      `})
 
 
     const browser = await puppeteer.launch({ headless: true });
