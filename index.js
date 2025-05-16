@@ -93,7 +93,7 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
       return res.status(404).json({ message: "Orçamento não encontrado" });
     }
 
-    res.status(200).pdf(orcamento)
+    res.status(200).json(orcamento)
     const html = `
       <!DOCTYPE html>
       <html>
