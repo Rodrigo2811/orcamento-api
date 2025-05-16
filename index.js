@@ -118,7 +118,7 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
     }
     footer span {
       margin: 10px 100px;
-      border-top: 2px solid black; /* <- Aqui foi aumentada a espessura */
+      border-top: 2px solid black; 
       width: 350px;
       padding: 5px 70px;
     }
