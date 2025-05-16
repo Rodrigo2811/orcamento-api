@@ -1,9 +1,10 @@
 
-import express from 'express';
+import express, { response } from 'express';
 import mongoose from "mongoose";
 import cors from 'cors';
 import puppeteer from "puppeteer";
 import fs from 'fs/promises';
+import { format } from "path";
 
 
 
@@ -175,23 +176,33 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
       `;
 
 
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
 
-    await page.goto('https://www.gooogle.com/')
+    await page.goto('https://orcamento-api.vercel.app/orcamento')
 
-    await page.setContent(html);
+    const pdf = ({
+      format: "A4"
+    });
 
-    const pdfBuffer = await page.pdf({ format: "A4" });
+
     await browser.close();
 
+    response.contentType('application/pdf')
+
+    return response.send(pdf)
+    // await page.setContent(html);
+
+    // const pdfBuffer = await page.pdf({ format: "A4" });
 
 
-    res.setHeader('Content-Type', 'application/pdf');
 
-    res.setHeader('Content-Disposition', `inline; filename="orcamento-${orcamento.cliente}.pdf"`);
 
-    res.send(pdfBuffer);
+    // res.setHeader('Content-Type', 'application/pdf');
+
+    // res.setHeader('Content-Disposition', `inline; filename="orcamento-${orcamento.cliente}.pdf"`);
+
+    // res.send(pdfBuffer);
 
   } catch (error) {
     res.status(404).json({ message: "Erro ao gerar o orçamento" });
