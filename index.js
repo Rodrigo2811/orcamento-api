@@ -160,6 +160,9 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
 
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
+
+    await page.goto('https://www.gooogle.com/')
+
     await page.setContent(html);
     const pdfBuffer = await page.pdf({ format: "A4" });
     await browser.close();
