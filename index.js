@@ -92,6 +92,8 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
     if (!orcamento) {
       return res.status(404).json({ message: "Orçamento não encontrado" });
     }
+
+    res.pdf(orcamento)
     const html = `
         <!DOCTYPE html>
         <html>
@@ -173,7 +175,6 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
         </html>
       `;
 
-    puppeteer.create(html)
 
     const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
@@ -185,7 +186,7 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
     await browser.close();
 
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `filename="orcamento-${orcamento.cliente}.pdf"`);
+    res.setHeader('Content-Disposition', `inline; filename="orcamento-${orcamento.cliente}.pdf"`);
 
     return res.send(pdfBuffer);
   } catch (error) {
