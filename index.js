@@ -69,6 +69,21 @@ app.post("/orcamento", async (req, res) => {
 });
 
 
+app.get("/orcamento/:id", async (req, res) => {
+  const { id } = req.params
+
+  try {
+    const orcamento = await orcamentos.findById(id);
+    if (!orcamento) {
+      return res.status(404).json({ message: "Orçamento não encontrato" })
+    }
+
+    res.status(200).json(orcamento)
+  } catch (error) {
+    console.error(error)
+  }
+})
+
 app.get('/orcamentoPDF/:id', async (req, res) => {
   const { id } = req.params;
 
