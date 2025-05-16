@@ -1,10 +1,9 @@
 
-import express, { response } from 'express';
+import express from 'express';
 import mongoose from "mongoose";
 import cors from 'cors';
 import puppeteer from "puppeteer";
 import fs from 'fs/promises';
-import { format } from "path";
 
 
 
@@ -93,7 +92,7 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
     if (!orcamento) {
       return res.status(404).json({ message: "Orçamento não encontrado" });
     }
-
+    res.status(200).json(orcamento)
     const html = `
         <!DOCTYPE html>
         <html>
@@ -118,7 +117,7 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
     }
     footer span {
       margin: 10px 100px;
-      border-top: 2px solid black; 
+      border-top: 2px solid black; /* <- Aqui foi aumentada a espessura */
       width: 350px;
       padding: 5px 70px;
     }
@@ -176,29 +175,19 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
       `;
 
 
-    const browser = await puppeteer.launch({ headless: "true" });
+    const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
 
-    await page.setContent(html, { waitUntil: 'networkidle0' })
+    await page.setContent(html, { waitUntil: 'networkidle0' });
 
     const pdfBuffer = await page.pdf({ format: "A4" });
 
     await browser.close();
 
-    res.contentType('application/pdf')
-
-
-
-
-
-    // res.setHeader('Content-Type', 'application/pdf');
-
+    res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `inline; filename="orcamento-${orcamento.cliente}.pdf"`);
 
-
-
-    return res.send(pdfBuffer)
-
+    return res.send(pdfBuffer);
   } catch (error) {
     res.status(404).json({ message: "Erro ao gerar o orçamento" });
   }
