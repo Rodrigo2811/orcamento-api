@@ -93,7 +93,7 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
       return res.status(404).json({ message: "Orçamento não encontrato" })
     }
 
-    res.status(200)
+    res.status(200).text(orcamento)
 
 
     const html = `
@@ -184,12 +184,11 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.setContent(html);
-    const pdfBuffer = await page.p
-    await fs.writeFile('orcamento.pdf', pdfBuffer)
+    const pdfBuffer = await page.pdf({ format: "A4" });
     await browser.close()
 
     res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", `attachment; filename=orcamento.pdf`);
+    res.setHeader("Content-Disposition", `attachment; filename=.pdf`);
     res.send(pdfBuffer)
 
   } catch (error) {
