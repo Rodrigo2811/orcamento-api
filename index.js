@@ -88,10 +88,12 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const orcamento = await orcamentos.findById(id).lean();
+    const orcamento = await orcamentos.findById(id);
     if (!orcamento) {
-      return res.status(404).json({ message: "Orçamento não encontrado" });
+      return res.status(404).json({ message: "Orçamento não encontrato" })
     }
+
+    res.status(200).json(orcamento)
 
 
     const html = `
@@ -189,10 +191,11 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
     res.setHeader("Content-Disposition", `attachment; filename= ${orcamento.cliente.replace(/\s+/g, '-')}.pdf`);
     res.send(pdfBuffer)
 
-
   } catch (error) {
     res.status(404).json({ message: "Erro ao gerar o orçamento" });
   }
+
+
 });
 
 
