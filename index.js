@@ -184,11 +184,12 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.setContent(html);
-    const pdfBuffer = await page.pdf({ format: "A4" });
+    const pdfBuffer = await page.p
+    await fs.writeFile('orcamento.pdf', pdfBuffer)
     await browser.close()
 
     res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", `attachment; filename= ${orcamento.cliente.replace(/\s+/g, '-')}.pdf`);
+    res.setHeader("Content-Disposition", `attachment; filename=orcamento.pdf`);
     res.send(pdfBuffer)
 
   } catch (error) {
