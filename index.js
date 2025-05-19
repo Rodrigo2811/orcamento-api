@@ -93,6 +93,7 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
       return res.status(404).json({ message: "Orçamento não encontrado" });
     }
 
+
     const html = `
         <!DOCTYPE html>
         <html>
@@ -153,14 +154,18 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
                   <tr>
                     <td>${item.item}</td>
                     <td>${item.descricao}</td>
-                    <td>R$ ${Number(item.valor).toFixed(2)}</td>
+                    <td>R$ ${!isNaN(Number(item.valor))
+        ? Number(item.valor).toFixed(2)
+        : "0.00"}</td>
                   </tr>
                 `).join('')}
               </tbody>
               <tfoot>
                 <tr>
                   <td colspan="2" class="total">Total:</td>
-                  <td class="total">R$ ${Number(orcamento.total).toFixed(2)}</td>
+                  <td class="total">R$ ${!isNaN(parseFloat(orcamento.total))
+        ? parseFloat(orcamento.total).toFixed(2)
+        : "0.00"}</td>
                 </tr>
               </tfoot>
             </table>
