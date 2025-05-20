@@ -91,7 +91,7 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const orcamento = await orcamentos.findById(id).lean();
+    const orcamento = await orcamentos.findById(id);
     if (!orcamento) {
       return res.status(404).json({ message: "Orçamento não encontrado" });
     }
