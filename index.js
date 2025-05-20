@@ -95,68 +95,7 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
       return res.status(404).json({ message: "Orçamento não encontrado" });
     }
 
-    const html = `
-   <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Orçamento</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { border: 1px solid #ccc; padding: 8px; }
-    th { background-color: #f2f2f2; }
-  </style>
-</head>
-<body>
-  <header>
-    <h2>R.F.R Oficina, Funilaria e Pintura EIRELE - ME</h2>
-    <p>Rua Boa Esperança, Nº 112, Centro Dias D’Ávila-BA</p>
-    <span>(Bel Car)</span>
-  </header>
 
-  <h1>Orçamento</h1>
-
-  <p><strong>Cliente:</strong> ${orcamento.cliente || 'N/A'}</p>
-  <p><strong>Veículo:</strong> ${orcamento.veiculo || 'N/A'}</p>
-  <p><strong>Cor:</strong> ${orcamento.cor || 'N/A'}</p>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Item</th>
-        <th>Descrição</th>
-        <th>Valor (R$)</th>
-      </tr>
-    </thead>
-    <tbody>
-      ${orcamento.servico.map(s =>
-      `<tr>
-          <td>${s.item || ''}</td>
-          <td>${s.descricao || ''}</td>
-          <td>${!isNaN(Number(s.valor)) ? Number(s.valor).toFixed(2) : '0.00'}</td>
-        </tr>`
-    ).join('')}
-    </tbody>
-  </table>
-
-  <h3>Total: R$ ${!isNaN(Number(orcamento.total)) ? Number(orcamento.total).toFixed(2) : '0.00'}</h3>
-</body>
-</html>
-`;
-
-    const browser = await puppeteer.launch({
-      headless: "new",
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
-    });
-    const page = await browser.newPage();
-    await page.setContent(html, { waitUntil: 'networkidle0' });
-    const pdfBuffer = await page.pdf({ format: "A4" });
-    await browser.close()
-
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", `attachment; filename= ${orcamento.cliente.replace(/\s+/g, '-')}.pdf`);
-    res.send(pdfBuffer)
 
 
   } catch (error) {
