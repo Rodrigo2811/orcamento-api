@@ -164,9 +164,7 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
               <tfoot>
                 <tr>
                   <td colspan="2" class="total">Total:</td>
-                  <td class="total">R$ ${!isNaN(parseFloat(orcamento.total))
-        ? parseFloat(orcamento.total).toFixed(2)
-        : "0.00"}</td>
+                  <td class="total">R$ ${!isNaN(orcamento.total) ? Number(orcamento.total).toFixed(2) : '0.00'} </td>
                 </tr>
               </tfoot>
             </table>
@@ -195,7 +193,8 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
 
 
   } catch (error) {
-    res.status(404).json({ message: "Erro ao gerar o orçamento" });
+    console.error("Erro ao gerar PDF: ", error)
+    res.status(500).json({ message: "Erro interno ao gerar o orçamento", erro: error.message });
   }
 });
 
