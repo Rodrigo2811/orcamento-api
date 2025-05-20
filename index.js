@@ -33,10 +33,10 @@ const orcamentos = mongoose.model("orcamento", {
   servico: [{
     item: Number,
     descricao: String,
-    valor: isNumber
+    valor: Number
   }],
 
-  total: isNumber
+  total: Number
 })
 
 
