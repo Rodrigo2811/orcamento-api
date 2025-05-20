@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import cors from 'cors';
 import puppeteer from "puppeteer";
 import fs from 'fs/promises';
+import { isNumber } from "puppeteer";
 
 
 
@@ -32,10 +33,10 @@ const orcamentos = mongoose.model("orcamento", {
   servico: [{
     item: Number,
     descricao: String,
-    valor: Number
+    valor: isNumber
   }],
 
-  total: Number
+  total: isNumber
 })
 
 
@@ -52,15 +53,10 @@ app.get('/orcamento', async (req, res) => {
 app.post("/orcamento", async (req, res) => {
   const { veiculo, cor, cliente, servico, total } = req.body;
 
-  const parserdServico = servico.map(item => ({
-    item: Number(item.item),
-    descricao: item.descricao,
-    valor: parseFloat(total)
-  }))
-  const parsedTotal = parseFloat(total)
+
 
   const orcamento = {
-    veiculo, cor, cliente, parserdServico, parsedTotal
+    veiculo, cor, cliente, servico, total
   };
 
   if (veiculo === "") {
