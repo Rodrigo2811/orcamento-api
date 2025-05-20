@@ -52,8 +52,15 @@ app.get('/orcamento', async (req, res) => {
 app.post("/orcamento", async (req, res) => {
   const { veiculo, cor, cliente, servico, total } = req.body;
 
+  const parserdServico = servico.map(item => ({
+    item: Number(item.item),
+    descricao: item.descricao,
+    valor: parseFloat(total)
+  }))
+  const parsedTotal = parseFloat(total)
+
   const orcamento = {
-    veiculo, cor, cliente, servico, total
+    veiculo, cor, cliente, parserdServico, parsedTotal
   };
 
   if (veiculo === "") {
@@ -88,13 +95,10 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const orcamento = await orcamentos.findById(id);
+    const orcamento = await orcamentos.findById(id).lean();
     if (!orcamento) {
-      return res.status(404).json({ message: "Orçamento não encontrato" })
+      return res.status(404).json({ message: "Orçamento não encontrado" });
     }
-
-    res.status(200).text(orcamento)
-
 
     const html = `
         <!DOCTYPE html>
@@ -188,14 +192,13 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
     await browser.close()
 
     res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", `attachment; filename=.pdf`);
+    res.setHeader("Content-Disposition", `attachment; filename= ${orcamento.cliente.replace(/\s+/g, '-')}.pdf`);
     res.send(pdfBuffer)
+
 
   } catch (error) {
     res.status(404).json({ message: "Erro ao gerar o orçamento" });
   }
-
-
 });
 
 
