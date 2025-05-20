@@ -95,7 +95,7 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
       return res.status(404).json({ message: "Orçamento não encontrado" });
     }
 
-
+    console.log(orcamento)
 
 
   } catch (error) {
