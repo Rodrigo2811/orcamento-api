@@ -59,7 +59,7 @@ app.get('/user', async (req, res) => {
 })
 
 
-app.post('/users', async (req, res) => {
+app.post('/user', async (req, res) => {
 
   const { usuario, senha, email } = req.body
 
