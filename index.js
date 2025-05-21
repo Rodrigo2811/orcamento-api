@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import cors from 'cors';
 import puppeteer from "puppeteer";
 import fs from 'fs/promises';
+import { create } from "domain";
 
 
 
@@ -25,6 +26,12 @@ mongoose.connect('mongodb+srv://rodrigoleiro:Q67wuTXpc3VI0ymZ@orcamentos.3xy54cl
 })
 
 
+const users = mongoose.model("usuarios", {
+  usuario: String,
+  senha: String,
+  email: String
+})
+
 const orcamentos = mongoose.model("orcamento", {
   veiculo: String,
   cor: String,
@@ -39,6 +46,46 @@ const orcamentos = mongoose.model("orcamento", {
 })
 
 
+
+//RODAS USUARIO
+
+app.get('/user', async (req, res) => {
+  try {
+    const respUser = await users.find()
+    res.status(200).json(respUser)
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao buscar usuários" })
+  }
+})
+
+
+app.post('/users', async (req, res) => {
+
+  const { usuario, senha, email } = req.body
+
+  const user = {
+    usuario, senha, email
+  }
+
+  if (usuario === "") {
+    return res.status(400).json({ message: "O campo usuário é obrigatorio " })
+  }
+
+  try {
+    await users.create(user)
+    return res.status(201).json({ message: "Usuário criado com sucesso" })
+  } catch (error) {
+    res.status(500).json({ erro: error })
+  }
+})
+
+
+
+
+
+
+
+// ROTAS DE ORCAMENTO
 
 app.get('/orcamento', async (req, res) => {
   try {
@@ -95,7 +142,7 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
       return res.status(404).json({ message: "Orçamento não encontrado" });
     }
 
-    console.log(orcamento)
+    return res.status(201).json({ message: "PDF gerado com sucesso" })
 
 
   } catch (error) {
