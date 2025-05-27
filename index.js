@@ -91,7 +91,7 @@ app.post('/user/login', async (req, res) => {
 
   try {
     const userLogin = await users.findOne({ usuario: usuario })
-    res.json(userLogin)
+
 
     if (!userLogin) {
       return res.status(400).json({ message: 'Usuário inválido' })
