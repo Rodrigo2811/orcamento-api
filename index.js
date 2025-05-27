@@ -87,27 +87,26 @@ app.post('/user', async (req, res) => {
 
 
 app.post('/user/login', async (req, res) => {
-  const { usuario, senha } = req.body
+  const { usuario, senha } = req.body;
 
+  try {
+    const userLogin = await users.findOne({ usuario: usuario });
 
-  const userLogin = await users.findOne({ usuario: usuario })
-
-
-  if (userLogin.rows.length > 0) {
-    const user = userLogin.rows[0]
-    const isMath = await bcrypt.compare(senha, user.senha)
-    if (isMath) {
-      res.status(200).json({ message: "Login Efetuado com sucesso" })
-    } else {
-      return res.status(401).json({ message: "Senha inválida" })
+    if (!userLogin) {
+      return res.status(400).json({ message: 'Usuário inválido' });
     }
-  } else {
-    res.status(400).json({ message: 'Usuário inválido' })
+
+    const isMatch = await bcrypt.compare(senha, userLogin.senha);
+
+    if (isMatch) {
+      res.status(200).json({ message: 'Login efetuado com sucesso' });
+    } else {
+      res.status(401).json({ message: 'Senha inválida' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Erro ao realizar login', erro: error.message });
   }
-
-
-})
-
+});
 
 
 
