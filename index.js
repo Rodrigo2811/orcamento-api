@@ -89,24 +89,20 @@ app.post('/user', async (req, res) => {
 app.post('/user/login', async (req, res) => {
   const { usuario, senha } = req.body
 
-  try {
-    const userLogin = await users.findOne({ usuario: usuario })
+
+  const userLogin = await users.findOne({ usuario: usuario })
 
 
-    if (!userLogin) {
-      return res.status(400).json({ message: 'Usuário inválido' })
+  if (userLogin.rows.length > 0) {
+    const user = userLogin.rows[0]
+    const isMath = await bcrypt.compare(senha, user.senha)
+    if (isMath) {
+      res.status(200).json({ message: "Login Efetuado com sucesso" })
+    } else {
+      return res.status(401).json({ message: "Senha inválida" })
     }
-
-    const isMath = await bcrypt.compare(senha, users.senha)
-
-    if (!isMath) {
-      return res.status(400).json({ message: "Senha inválida" })
-    }
-
-    res.status(200).json({ message: "Login Efetuado com sucesso" })
-
-  } catch (error) {
-    console.error(error)
+  } else {
+    res.status(400).json({ message: 'Usuário inválido' })
   }
 
 
