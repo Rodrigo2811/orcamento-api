@@ -86,7 +86,19 @@ app.post('/user', async (req, res) => {
 })
 
 
+app.post('/user/login', async (req, res) => {
+  const { usuario, password } = req.body
 
+  try {
+    const userLogin = await users.find()
+    console.log(userLogin)
+
+  } catch (error) {
+    console.error(error)
+  }
+
+
+})
 
 
 
