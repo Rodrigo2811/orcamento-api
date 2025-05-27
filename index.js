@@ -96,7 +96,7 @@ app.post('/userLogin', async (req, res) => {
       return res.status(400).json({ message: 'Usuário inválido' })
     }
 
-    const isMath = await bcrypt.compare(senha, users.senha)
+    const isMath = bcrypt.compare(senha, userLogin.senha)
 
     if (!isMath) {
       return res.status(400).json({ message: "Senha inválida" })
