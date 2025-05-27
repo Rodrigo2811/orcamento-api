@@ -64,7 +64,6 @@ app.post('/user', async (req, res) => {
   const { usuario, senha, email } = req.body
 
 
-
   if (usuario === "") {
     return res.status(400).json({ message: "O campo usuário é obrigatorio " })
   }
@@ -96,12 +95,12 @@ app.post('/user/login', async (req, res) => {
       return res.status(400).json({ message: 'Usuário inválido' });
     }
 
-    const isMatch = await bcrypt.compare(senha, userLogin.senha);
+    const isMatch = bcrypt.compare(String(senha), (userLogin.senha));
 
     if (isMatch) {
-      res.status(200).json({ message: 'Login efetuado com sucesso' });
+      return res.status(200).json({ message: 'Login efetuado com sucesso' });
     } else {
-      res.status(401).json({ message: 'Senha inválida' });
+      return res.status(401).json({ message: 'Senha inválida' });
     }
   } catch (error) {
     res.status(500).json({ message: 'Erro ao realizar login', erro: error.message });
