@@ -95,7 +95,7 @@ app.post('/user/login', async (req, res) => {
       return res.status(400).json({ message: 'Usuário inválido' });
     }
 
-    const isMatch = bcrypt.compare(String(senha), (userLogin.senha));
+    const isMatch = await bcrypt.compare(senha, userLogin.senha);
 
     if (isMatch) {
       return res.status(200).json({ message: 'Login efetuado com sucesso' });
