@@ -87,11 +87,22 @@ app.post('/user', async (req, res) => {
 
 
 app.post('/user/login', async (req, res) => {
-  const { usuario, password } = req.body
+  const { usuario, senha } = req.body
 
   try {
-    const userLogin = await users.find()
-    console.log(userLogin)
+    const userLogin = await users.findOne({ usuario: usuario })
+
+    if (!userLogin) {
+      return res.status(400).json({ message: 'Usuário inválido' })
+    }
+
+    const isMath = await bcrypt.compare(senha, users.senha)
+
+    if (!isMath) {
+      return res.status(400).json({ message: "Senha inválida" })
+    }
+
+    res.status(200).json({ message: "Login Efetuado com sucesso" })
 
   } catch (error) {
     console.error(error)
