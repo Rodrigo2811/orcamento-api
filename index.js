@@ -2,9 +2,9 @@
 import express from 'express';
 import mongoose from "mongoose";
 import cors from 'cors';
+import bcrypt from 'bcrypt'
 import puppeteer from "puppeteer";
 import fs from 'fs/promises';
-import { create } from "domain";
 
 
 
@@ -47,7 +47,7 @@ const orcamentos = mongoose.model("orcamento", {
 
 
 
-//RODAS USUARIO
+//ROTAS USUARIO
 
 app.get('/user', async (req, res) => {
   try {
@@ -63,16 +63,22 @@ app.post('/user', async (req, res) => {
 
   const { usuario, senha, email } = req.body
 
-  const user = {
-    usuario, senha, email
-  }
+
 
   if (usuario === "") {
     return res.status(400).json({ message: "O campo usuário é obrigatorio " })
   }
 
   try {
-    await users.create(user)
+    const hashPassword = await bcrypt.hash(senha, 10)
+
+    const newUser = {
+      usuario: usuario,
+      senha: hashPassword,
+      email: email
+    }
+
+    await users.create(newUser)
     return res.status(201).json({ message: "Usuário criado com sucesso" })
   } catch (error) {
     res.status(500).json({ erro: error })
