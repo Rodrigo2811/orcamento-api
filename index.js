@@ -37,6 +37,7 @@ const orcamentos = mongoose.model("orcamento", {
   cor: String,
   cliente: String,
   servico: [{
+    _id: mongoose.Schema.Types.ObjectId,
     item: Number,
     descricao: String,
     valor: Number
@@ -174,6 +175,38 @@ app.get('/orcamentoPDF/:id', async (req, res) => {
     res.status(500).json({ message: "Erro interno ao gerar o orçamento", erro: error.message });
   }
 });
+
+app.put("/orcamento/:id", async (req, res) => {
+  const { id } = req.params;
+  const updateData = req.body
+
+  if (!updateData || Object.keys(updateData).length === 0) {
+    return res.status(400).json({ message: "Orçamento não encontrado" })
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "id inválido" })
+  }
+  try {
+    const orcamento = await orcamentos.findById(id)
+    if (!orcamento) {
+      return res.status(404).json({ message: "Orçamento não encontrado" })
+    }
+
+    Object.assign(orcamento, updateData)
+
+    const orcamentoAtt = await orcamento.save()
+
+    return res.status(200).json({
+      message: "Orçamento atualizado com sucesso",
+      orcamento: orcamentoAtt
+    })
+  } catch (error) {
+    console.error("Erro ao atualizar orçamento:", error)
+    return res.status(500).json({ message: "Erro ao atualizar o orçamento.", erro: error.message })
+  }
+
+})
 
 
 app.delete("/orcamento/:id", async (req, res) => {
