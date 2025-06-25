@@ -16,7 +16,7 @@ app.use(cors())
 
 
 
-mongoose.connect('mongodb+srv://rodrigoleiro:Q67wuTXpc3VI0ymZ@orcamentos.3xy54cl.mongodb.net/?retryWrites=true&w=majority&appName=orcamentos', {
+mongoose.connect('mongodb+srv://rodrigoleiro:Uinuq8amIgnCcv08@orcamentos.3xy54cl.mongodb.net/?retryWrites=true&w=majority&appName=orcamentos', {
 
 }).then(() => {
   console.log('Conectado no banco')
